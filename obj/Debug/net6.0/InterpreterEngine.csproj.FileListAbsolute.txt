@@ -1,0 +1,15 @@
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.csproj.AssemblyReference.cache
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.GeneratedMSBuildEditorConfig.editorconfig
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.AssemblyInfoInputs.cache
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.AssemblyInfo.cs
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.csproj.CoreCompileInputs.cache
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/bin/Debug/net6.0/InterpreterEngine
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/bin/Debug/net6.0/InterpreterEngine.deps.json
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/bin/Debug/net6.0/InterpreterEngine.runtimeconfig.json
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/bin/Debug/net6.0/InterpreterEngine.dll
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/bin/Debug/net6.0/ref/InterpreterEngine.dll
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/bin/Debug/net6.0/InterpreterEngine.pdb
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.dll
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/ref/InterpreterEngine.dll
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.pdb
+/home/david/David/Programación/CC/Programacion/Segundo Proyecto/InterpreterEngine/obj/Debug/net6.0/InterpreterEngine.genruntimeconfig.cache
