@@ -22,6 +22,16 @@ class Lexer {
         }
     }
 
+    // para ver el siguiente caracter sin moverme a el
+    private char Peek() {
+        int peekPos = pos + 1;
+        if (peekPos > text.Length - 1) {
+            return '~';
+        } else {
+            return text[peekPos];
+        }
+    }
+
     private void SkipWhiteSpace() {
         while (currentChar != '~' && currentChar == ' ') {
             Advance();
@@ -32,11 +42,20 @@ class Lexer {
     private int Integer() {
         string result = ""; 
 
-        while (currentChar != '~' && (currentChar > 47 && currentChar < 58)) {
+        while (currentChar != '~' && IsNum(currentChar)) {
             result += currentChar;  
             Advance();
         }  
         return Int32.Parse(result);
+    }
+
+    private Token Id() {
+        string result = "";
+        while (currentChar != '~' && isAlfNum(currentChar)) {
+            result += currentChar;
+            Advance();
+        }
+        return new Token(result,result);
     }
     
     public Token GetNextToken() {
@@ -47,7 +66,7 @@ class Lexer {
                 continue;
             }
             // 47 porque es cero tambien esta incluido
-            if (currentChar > 47 && currentChar < 58) { 
+            if (IsNum(currentChar)) { 
                 return new Token("INT", Integer().ToString());
             }
             if (currentChar == '+') { 
@@ -78,5 +97,12 @@ class Lexer {
             Utils.Error("Caracter invalido");
         }     
         return new Token("EOF", "~");
+    }
+
+    private bool IsNum(char ch) {
+        return (ch > 47 && ch < 58);
+    }
+    private bool isAlfNum(char ch) {
+        return IsNum(ch) || (ch > 64 && ch < 123);
     }
 }

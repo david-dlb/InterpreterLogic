@@ -1,10 +1,16 @@
 namespace Conqueror.Logic.Language;
 
-// Var: solo contendra letras del abecedario
-// OP: +-*/% &|
-// BOOL: T y F
-// STRUCT: seran sentencias if, while
-// LPAREN, RPAREN - ()
+// MINUS: -
+// PLUS: +
+// MULT: *
+// DIV: /
+// BEGIN: comienzo de una declaración compuesta
+// END: final de la declaración compuesta
+// DOT: .
+// ID: identificador
+// ASSING: :=
+// SEMI: ;
+// LPAREN, RPAREN: ()
 // EOF: ~
 class Token {
     // tipos de token: VAR, OP, INT, BOOL, LPAREN, RPAREN, STRUCT, EOF

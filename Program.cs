@@ -1,7 +1,7 @@
 ﻿using System;
 using Conqueror.Logic;
 using Conqueror.Logic.Language;
-string effect = "++-+---1+++(---+34)";
+string effect = "++-+---1(*4)+++(---+34)";
 
 Lexer lexer = new Lexer(effect); 
 Parser pr = new Parser(lexer);
