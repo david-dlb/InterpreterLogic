@@ -28,6 +28,7 @@ class Interpreter : NodeVisitor{
             return VisitNoOp(node);
         }
         if (node is Var) {
+            //Console.WriteLine(((Var)node).Value);
             return VisitVar(node);
         }
         if (node is Assign) {
@@ -105,11 +106,10 @@ class Interpreter : NodeVisitor{
 
     public Object VisitVar(Object node) {
         string name = ((Var)node).Value;
-        if (Scope.ContainsKey(name)) {
-            return ((Var)node).Value;
+        if (!Scope.ContainsKey(name)) {
+            Utils.Error("Uso de variable no creada previamente");
         }
-        Utils.Error("Variable no definida");
-        return null;
+        return Scope[name];
     }
 
     public void Interpret() {

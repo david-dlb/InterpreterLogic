@@ -19,7 +19,7 @@ class Parser {
             currentToken = lexer.GetNextToken();
         } else {
             //Console.WriteLine(tokenType + " " + currentToken.Type);
-            Utils.Error("sintaxis incorrecta");
+            Utils.Error("Sintaxis incorrecta");
         }
     }
 
@@ -140,12 +140,29 @@ class Parser {
         */
         Object node = Statement();
         List<Object> results = new List<object>();
-        results.Add(node);
-
+        results.Add(node);  
+        if (currentToken.Type != "SEMI") {
+            Utils.Error("Esperado ; al final de la instruccion");
+        }
+        
         while (currentToken.Type == "SEMI") {
             Eat("SEMI");
+
+            bool mk = false;
+            if (currentToken.Type != "END") {
+                mk = true;
+            }
+
             results.Add(Statement());
-        }
+
+            // para validar que al final de la instruccion se puso ;
+            if (mk == true && currentToken.Type == "END") {
+                Utils.Error("Esperado ; al final de la instruccion");
+            }
+        } 
+        
+
+ 
         return results;
     }
 

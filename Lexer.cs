@@ -33,7 +33,7 @@ class Lexer {
     }
 
     private void SkipWhiteSpace() {
-        while (currentChar != '~' && (currentChar == ' ' || currentChar == '\n')) {
+        while (currentChar != '~' && IsSpace(currentChar)) {
             Advance();
         }
     }
@@ -51,7 +51,7 @@ class Lexer {
 
     private Token Id() {
         string result = "";
-        while (currentChar != '~' && isAlfNum(currentChar)) {
+        while (currentChar != '~' && IsAlfNum(currentChar)) {
             result += currentChar;
             Advance();
         }
@@ -71,7 +71,7 @@ class Lexer {
     public Token GetNextToken() {
         //Console.WriteLine(currentChar);
         while (currentChar != '~') {
-            if (currentChar == ' ' || currentChar == '\n') {
+            if (IsSpace(currentChar)) {
                 SkipWhiteSpace();
                 continue;
             }
@@ -102,7 +102,7 @@ class Lexer {
                 Advance();
                 return new Token("RPAREN", ")");
             }
-            if (isAlpha(currentChar)) {
+            if (IsAlpha(currentChar)) {
                 return Id();
             }
             if (currentChar == ':' && Peek() == '=') {
@@ -119,7 +119,7 @@ class Lexer {
                 return new Token("DOT", ".");
             }
             
-            //Console.WriteLine(currentChar);
+            Console.WriteLine(currentChar);
             Utils.Error("Caracter invalido");
         }     
         return new Token("EOF", "~");
@@ -128,10 +128,13 @@ class Lexer {
     private bool IsNum(char ch) {
         return (ch > 47 && ch < 58);
     }
-    private bool isAlfNum(char ch) {
+    private bool IsAlfNum(char ch) {
         return IsNum(ch) || (ch > 64 && ch < 123);
     }
-    private bool isAlpha(char ch) {
+    private bool IsAlpha(char ch) {
         return ch > 64 && ch < 123;
+    }
+    private bool IsSpace(char ch) {
+        return ch == '\n' || ch == '\r' || ch == ' ';
     }
 }
