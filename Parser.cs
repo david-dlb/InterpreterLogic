@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using Microsoft.VisualBasic.CompilerServices;
 namespace Conqueror.Logic.Language;
@@ -12,39 +13,49 @@ class Parser {
     }
 
     public void Eat(string tokenType) {
+        // chequea si es el token esperado
         //Console.WriteLine(currentToken.Type + " " + tokenType);
         if (currentToken.Type == tokenType) {
             currentToken = lexer.GetNextToken();
         } else {
+            //Console.WriteLine(tokenType + " " + currentToken.Type);
             Utils.Error("sintaxis incorrecta");
         }
     }
 
     public Object Factor() {
+        /*
+            factor : PLUS  factor
+                   | MINUS factor
+                   | INTEGER
+                   | LPAREN expr RPAREN
+                   | variable
+        */
         //Console.WriteLine(currentToken.Value + " " + currentToken.Type);
         Token token = new Token(currentToken);
         
-        if (token.Type == "PLUS") {
-            Eat("PLUS");
-            return new UnaryOp(token, Factor());
-        } else {
-            if (token.Type == "MINUS") {
+        switch (token.Type) {
+            case "PLUS":
+                Eat("PLUS");
+                return new UnaryOp(token, Factor());
+
+            case "MINUS":
                 Eat("MINUS");
                 return new UnaryOp(token, Factor());
-            } else {
-                if (token.Type == "INT") {
+
+            case "INT":
                     Eat("INT");
                     return new Num(token);
-                } else {
-                    if (token.Type == "LPAREN") {
-                        Eat("LPAREN");
-                        Object node = Expr();
-                        Eat("RPAREN"); 
-
-                        return node;
-                    }
-                }
-            }
+                
+            case "LPAREN":
+                Eat("LPAREN");
+                Object node1 = Expr();
+                Eat("RPAREN"); 
+                return node1;
+            
+            case "ID":
+                Object node2 = Variable();
+                return node2;
         }
         return null;
     }
@@ -61,8 +72,7 @@ class Parser {
             //Console.WriteLine("hhoa");
             if (token.Type == "MUL") {
                 Eat("MUL");
-            }
-            else {
+            } else {
                 Eat("DIV");
             }
             node = new BinOp(node, token, Factor());
@@ -96,15 +106,86 @@ class Parser {
     }
 
     public Object Parse() {
-        Object res = Expr(); 
-        /* 
-        BinOp b1 = (BinOp)res;
-        Num r = (Num)(b1.Right);
-        BinOp b2 = (BinOp)b1.Left;
-        Num l1 = (Num)(b2.Left);
-        Num l2 = (Num)(b2.Right); */
+        Object node = Program();
+        if (currentToken.Type != "EOF") {
+            Utils.Error("sintaxis incorrecta");
+        }
+        return node;
+    }
 
-        //Console.WriteLine(b2.Op.Value);
-        return res;
+    public Object Program() {
+        // program: compoundStatament DOT
+        Object node = CompoundStatement();
+        Eat("DOT");
+        return node;
+    }
+
+    public Object CompoundStatement() {
+        // compoundStatament: BEGIN statamentList END
+        Eat("BEGIN");
+        List<Object> nodes = StatementList();
+        Eat("END");
+
+        Compound root = new Compound();
+        foreach (var item in nodes) {
+            root.Children.Add(item);
+        }
+        return root;
+    }
+
+    public List<Object> StatementList() {
+        /*
+            statementList: statement
+                         | statement SEMI statementList
+        */
+        Object node = Statement();
+        List<Object> results = new List<object>();
+        results.Add(node);
+
+        while (currentToken.Type == "SEMI") {
+            Eat("SEMI");
+            results.Add(Statement());
+        }
+        return results;
+    }
+
+    public Object Statement() {
+        /*
+            statement: componentStatement
+                     | assignmentSatement
+                     | empty
+        */
+        switch (currentToken.Type) {
+            case "BEGIN":
+                return CompoundStatement();
+
+            case "ID":
+                return AssignmentSatement();
+            
+            default:
+                return Empty();
+        }
+    }
+
+    public Object AssignmentSatement() {
+        Object left = Variable();
+        Token token = new Token(currentToken);
+        Eat("ASSIGN");
+        Object right = Expr();
+        Object node = new Assign(left, token, right);
+        return node;
+    }
+
+    public Object Variable() {
+        //variable: ID
+        Object node = new Var(currentToken);
+        //Console.WriteLine(((Var)node).Token.Type);
+        Eat("ID");
+        return node;
+    }
+
+    public Object Empty() {
+        // una linea vacia
+        return new NoOp();
     }
 }

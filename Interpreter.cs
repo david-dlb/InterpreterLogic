@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
 namespace Conqueror.Logic.Language;
 
 class Interpreter : NodeVisitor{
+    public Dictionary<string, int> Scope;
     private Parser parser;
     
     public Interpreter(Parser parser) {
@@ -18,6 +20,18 @@ class Interpreter : NodeVisitor{
         }
         if (node is UnaryOp) {
             return VisitUnaryOP(node);
+        }
+        if (node is Compound) {
+            VisitCompount(node);
+        }
+        if (node is NoOp) {
+            return VisitNoOp(node);
+        }
+        if (node is Var) {
+            return VisitVar(node);
+        }
+        if (node is Assign) {
+            VisitAssign(node);
         }
         return null;
     }
@@ -36,19 +50,18 @@ class Interpreter : NodeVisitor{
         switch (op.Op.Type) {
             case "PLUS":
                 return Int32.Parse(sl) + Int32.Parse(sr); 
-                break;
+
             case "MINUS": 
                 return Int32.Parse(sl) - Int32.Parse(sr);
-                break;
-            case "MULT":
+
+            case "MUL":
                 return Int32.Parse(sl) * Int32.Parse(sr);
-                break;
+
             case "DIV": 
                 if (sr == "0") {
                     Utils.Error("Division por cero");
                 } 
                 return Int32.Parse(sl) / Int32.Parse(sr);
-                break;
         }
         return null;
     }
@@ -61,20 +74,47 @@ class Interpreter : NodeVisitor{
 
     public Object VisitUnaryOP(Object node) {
         UnaryOp uop = (UnaryOp)node;
-        if (uop.Token.Type == "PLUS") {
-            Object value = Visit(uop.Expr);
-            int s = Int32.Parse(value.ToString()) * 1;
-            return s;
-        } else {
-            string value = Visit(uop.Expr).ToString();
-            int s = Int32.Parse(value) * (-1); 
-            return s;
+        string value = Visit(uop.Expr).ToString();
+        return Int32.Parse(value) * (uop.Token.Type == "PLUS" ? 1 : -1);
+    }
+
+    public void VisitCompount(Object node) {
+        List<Object> children = ((Compound)node).Children;
+        foreach (var item in children) {
+            Visit(item);
         }
     }
 
-    public Object Interpret() {
+    public Object VisitNoOp(Object node) {
+        return null;
+    }
+
+    public void VisitAssign(Object node) {
+        Assign assign = (Assign)node;
+        string name = ((Var)assign.Left).Value;
+        Object visit = Visit(assign.Right);
+        string res = visit.ToString();
+        int result = Int32.Parse(res);
+
+        if (Scope.ContainsKey(name)) {
+            Scope[name] = result;
+        } else {
+            Scope.Add(name, result);
+        }
+    }
+
+    public Object VisitVar(Object node) {
+        string name = ((Var)node).Value;
+        if (Scope.ContainsKey(name)) {
+            return ((Var)node).Value;
+        }
+        Utils.Error("Variable no definida");
+        return null;
+    }
+
+    public void Interpret() {
+        Scope = new Dictionary<string, int>();
         Object tree = parser.Parse();
-        
-        return Visit(tree);
+        Visit(tree);
     }
 }

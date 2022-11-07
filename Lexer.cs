@@ -33,7 +33,7 @@ class Lexer {
     }
 
     private void SkipWhiteSpace() {
-        while (currentChar != '~' && currentChar == ' ') {
+        while (currentChar != '~' && (currentChar == ' ' || currentChar == '\n')) {
             Advance();
         }
     }
@@ -55,17 +55,26 @@ class Lexer {
             result += currentChar;
             Advance();
         }
-        return new Token(result,result);
+
+        switch (result) {
+            case "BEGIN":
+                return new Token("BEGIN", "BEGIN");
+
+            case "END":
+                return new Token("END", "END");
+
+            default:
+                return new Token("ID", result);
+        }
     }
     
     public Token GetNextToken() {
         //Console.WriteLine(currentChar);
         while (currentChar != '~') {
-            if (currentChar == ' ') {
+            if (currentChar == ' ' || currentChar == '\n') {
                 SkipWhiteSpace();
                 continue;
             }
-            // 47 porque es cero tambien esta incluido
             if (IsNum(currentChar)) { 
                 return new Token("INT", Integer().ToString());
             }
@@ -79,7 +88,7 @@ class Lexer {
             }
             if (currentChar == '*') {
                 Advance();
-                return new Token("MULT", "*");
+                return new Token("MUL", "*");
             }
             if (currentChar == '/') { 
                 Advance();
@@ -93,6 +102,23 @@ class Lexer {
                 Advance();
                 return new Token("RPAREN", ")");
             }
+            if (isAlpha(currentChar)) {
+                return Id();
+            }
+            if (currentChar == ':' && Peek() == '=') {
+                Advance();
+                Advance();
+                return new Token("ASSIGN", ":=");
+            }
+            if (currentChar == ';') {
+                Advance();
+                return new Token("SEMI", ";");
+            }
+            if (currentChar == '.') {
+                Advance();
+                return new Token("DOT", ".");
+            }
+            
             //Console.WriteLine(currentChar);
             Utils.Error("Caracter invalido");
         }     
@@ -104,5 +130,8 @@ class Lexer {
     }
     private bool isAlfNum(char ch) {
         return IsNum(ch) || (ch > 64 && ch < 123);
+    }
+    private bool isAlpha(char ch) {
+        return ch > 64 && ch < 123;
     }
 }
