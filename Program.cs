@@ -2,7 +2,8 @@
 using Conqueror.Logic;
 using Conqueror.Logic.Language;
 string effect = @"BEGIN   
-                    IF(3 == 4 & 4 == 4 | 4 == 3) BEGIN 
+                    IF(4 == 4 | 3 == 2) BEGIN 
+                        a:= 1;
                     END;
                 END.";
 
@@ -11,6 +12,7 @@ Parser pr = new Parser(lexer);
 Interpreter i = new Interpreter(pr);
 i.Interpret();
 
+Console.WriteLine("a = " + i.Scope["a"]);
 
 //Lexer l = new Lexer("BEGIN a := 2; END.");
 

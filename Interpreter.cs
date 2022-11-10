@@ -34,6 +34,9 @@ class Interpreter : NodeVisitor{
         if (node is Assign) {
             VisitAssign(node);
         }
+        if (node is Condition) {
+            VisitCondition(node);
+        }
         return null;
     }
 
@@ -47,7 +50,7 @@ class Interpreter : NodeVisitor{
 
         string sl = vl.ToString();
         string sr = vr.ToString();
-
+    //Console.WriteLine(op.Op.Type);
         switch (op.Op.Type) {
             case "PLUS":
                 return Int32.Parse(sl) + Int32.Parse(sr); 
@@ -63,6 +66,21 @@ class Interpreter : NodeVisitor{
                     Utils.Error("Division por cero");
                 } 
                 return Int32.Parse(sl) / Int32.Parse(sr);
+            
+            case "LESS":
+                return Int32.Parse(sl) < Int32.Parse(sr);
+            
+            case "MORE":
+                return Int32.Parse(sl) > Int32.Parse(sr);
+            
+            case "EQUAL":
+                return Int32.Parse(sl) == Int32.Parse(sr);
+            
+            case "AND":
+                return sl == "True" && sr == "True";
+
+            case "OR":
+                return sl == "True" || sr == "True";
         }
         return null;
     }
@@ -110,6 +128,17 @@ class Interpreter : NodeVisitor{
             Utils.Error("Uso de variable no creada previamente");
         }
         return Scope[name];
+    }
+
+    public void VisitCondition(Object node) {
+        Condition condition = (Condition)node;
+        if (!(condition.Cond is BinOp)) {
+            Utils.Error("Error se esperaba una operacion binaria de comparacion");
+        }
+        Object mk = VisitBinOp(condition.Cond);
+        if (mk.ToString() == "True") {
+            Visit(condition.Compound);
+        }
     }
 
     public void Interpret() {

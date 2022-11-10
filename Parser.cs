@@ -214,18 +214,6 @@ class Parser {
         return new Condition(componentStatement, comparer);
     }
 
-    public Object Comparer() {
-        Object expr = Expr();
-        Object expr2 = null;
-
-        if (currentToken.Type == "LESS" || currentToken.Type == "MORE" || currentToken.Type == "EQUAL") {
-            Eat(currentToken.Type); 
-            expr2 = Expr();
-        } else {
-            Utils.Error("Falta un operador de condicion valido");
-        }
-        return 1;
-    }
     public Object Logic() {
         Object node = Comparer();
         while (currentToken.Type == "AND" || currentToken.Type == "OR") {
@@ -234,6 +222,20 @@ class Parser {
             node = new BinOp(node, token, Comparer());
         }
         return node;
+    }
+
+    public Object Comparer() {
+        Object node = Expr();
+        Object expr2 = null;
+        Token token = new Token(currentToken);
+
+        if (currentToken.Type == "LESS" || currentToken.Type == "MORE" || currentToken.Type == "EQUAL") {
+            Eat(currentToken.Type); 
+            expr2 = Expr();
+        } else {
+            Utils.Error("Falta un operador de condicion valido");
+        }
+        return new BinOp(node, token, expr2);
     }
 
     public Object Empty() {
