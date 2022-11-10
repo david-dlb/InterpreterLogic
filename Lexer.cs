@@ -60,6 +60,9 @@ class Lexer {
             case "BEGIN":
                 return new Token("BEGIN", "BEGIN");
 
+            case "IF":
+                return new Token("IF", "IF");
+
             case "END":
                 return new Token("END", "END");
 
@@ -102,6 +105,22 @@ class Lexer {
                 Advance();
                 return new Token("RPAREN", ")");
             }
+            if (currentChar == '<') { 
+                Advance();
+                return new Token("LESS", "<");
+            }
+            if (currentChar == '>') { 
+                Advance();
+                return new Token("MORE", ">");
+            }
+            if (currentChar == '&') { 
+                Advance();
+                return new Token("AND", "&");
+            }
+            if (currentChar == '|') { 
+                Advance();
+                return new Token("OR", "|");
+            }
             if (IsAlpha(currentChar)) {
                 return Id();
             }
@@ -109,6 +128,10 @@ class Lexer {
                 Advance();
                 Advance();
                 return new Token("ASSIGN", ":=");
+            }if (currentChar == '=' && Peek() == '=') {
+                Advance();
+                Advance();
+                return new Token("EQUAL", "==");
             }
             if (currentChar == ';') {
                 Advance();

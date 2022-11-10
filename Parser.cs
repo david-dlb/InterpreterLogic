@@ -18,7 +18,7 @@ class Parser {
         if (currentToken.Type == tokenType) {
             currentToken = lexer.GetNextToken();
         } else {
-            //Console.WriteLine(tokenType + " " + currentToken.Type);
+            Console.WriteLine(tokenType + " " + currentToken.Type);
             Utils.Error("Sintaxis incorrecta");
         }
     }
@@ -90,6 +90,7 @@ class Parser {
         term   : factor ((MUL | DIV) factor)*
         factor : INTEGER | LPAREN expr RPAREN 
         */
+        //Console.WriteLine(currentToken.Value);
         Object node = Term();
         
         while (currentToken.Type == "MINUS" || currentToken.Type == "PLUS") {
@@ -141,7 +142,7 @@ class Parser {
         Object node = Statement();
         List<Object> results = new List<object>();
         results.Add(node);  
-        if (currentToken.Type != "SEMI") {
+        if (currentToken.Type != "SEMI" && !(node is NoOp)) {
             Utils.Error("Esperado ; al final de la instruccion");
         }
         
@@ -176,6 +177,9 @@ class Parser {
             case "BEGIN":
                 return CompoundStatement();
 
+            case "IF":
+                return Conditional();
+
             case "ID":
                 return AssignmentSatement();
             
@@ -198,6 +202,37 @@ class Parser {
         Object node = new Var(currentToken);
         //Console.WriteLine(((Var)node).Token.Type);
         Eat("ID");
+        return node;
+    }
+
+    public Object Conditional() {
+        Eat("IF");
+        Eat("LPAREN");
+        Object comparer = Logic();
+        Eat("RPAREN");
+        Object componentStatement = CompoundStatement(); 
+        return new Condition(componentStatement, comparer);
+    }
+
+    public Object Comparer() {
+        Object expr = Expr();
+        Object expr2 = null;
+
+        if (currentToken.Type == "LESS" || currentToken.Type == "MORE" || currentToken.Type == "EQUAL") {
+            Eat(currentToken.Type); 
+            expr2 = Expr();
+        } else {
+            Utils.Error("Falta un operador de condicion valido");
+        }
+        return 1;
+    }
+    public Object Logic() {
+        Object node = Comparer();
+        while (currentToken.Type == "AND" || currentToken.Type == "OR") {
+            Token token = new Token(currentToken);
+            Eat(token.Type);
+            node = new BinOp(node, token, Comparer());
+        }
         return node;
     }
 
