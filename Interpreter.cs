@@ -3,12 +3,13 @@ using Microsoft.VisualBasic.CompilerServices;
 using System;
 namespace Conqueror.Logic.Language;
 
-class Interpreter : NodeVisitor{
+class Interpreter{
     public Dictionary<string, int> Scope;
     private Parser parser;
     
-    public Interpreter(Parser parser) {
+    public Interpreter(Parser parser, Dictionary<string, int> scope) {
         this.parser = parser;
+        this.Scope = scope;
     }
 
     public Object Visit(Object node) { 
@@ -142,7 +143,6 @@ class Interpreter : NodeVisitor{
     }
 
     public void Interpret() {
-        Scope = new Dictionary<string, int>();
         Object tree = parser.Parse();
         Visit(tree);
     }
