@@ -34,16 +34,16 @@ class Bool : AST{
     }
 
     public Bool(bool value) { 
-        Console.WriteLine(value);
         this.Value = value;
-        
     }
 }
 
 class Function : AST { 
-    private string name;
+    public string Name {
+        get; private set;
+    }
     public Function(string name) {
-        this.name = name;
+        this.Name = name;
     }
 }
  

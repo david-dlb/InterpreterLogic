@@ -54,7 +54,8 @@ class Interpreter{
         AST sl = Visit(op.Left);
         AST sr = Visit(op.Right);
         //Console.WriteLine(vl.ToString() + " " + vr);
-        if (!((sl is Num) && (sr is Num) && !((sl is Bool) && (sr is Bool)))) {
+        if (!((sl is Num) && (sr is Num)) && !((sl is Bool) && (sr is Bool))) {
+            Console.WriteLine(sl + " " + sr);
             Utils.Error("Tipos de datos incorrectos en la expresion");
         }
 
@@ -163,7 +164,13 @@ class Interpreter{
         }
     }
     public void VisitFunction(AST node) {
-        Function condition = (Function)node;
+        Function func = (Function)node;
+        string name = func.Name;
+        if (Scope.ContainsKey(name)) {
+            Scope[name] ++;
+        } else {
+            Scope.Add(name, 1);
+        }
     }
 
     public void Interpret() {

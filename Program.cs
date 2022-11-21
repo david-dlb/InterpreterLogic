@@ -2,12 +2,13 @@
 using System;
 using Conqueror.Logic;
 using Conqueror.Logic.Language;
-string effect = @"BEGIN   
+string effect = @"   
                     EnemyLife:= 2; 
-                    IF (EnemyLife == 42) BEGIN
+                    if (EnemyLife == 2) {
                         EnemyLife := 3;
-                    END;
-                END.";
+                        ChangeHands();
+                    };  
+                ";
 
 Lexer lexer = new Lexer(effect); 
 Parser pr = new Parser(lexer);

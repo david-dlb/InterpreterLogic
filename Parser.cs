@@ -15,6 +15,7 @@ class Parser {
     public AST Parse() {
         AST node = Program();
         if (currentToken.Type != "EOF") {
+            //Console.WriteLine(currentToken.Value);
             Utils.Error("sintaxis incorrecta");
         }
         return node;
@@ -26,7 +27,7 @@ class Parser {
         if (currentToken.Type == tokenType) {
             currentToken = lexer.GetNextToken();
         } else {
-            Console.WriteLine(tokenType + " " + currentToken.Type);
+            Console.WriteLine("tokenType: " + tokenType + "  current " + currentToken.Type);
             Utils.Error("Sintaxis incorrecta");
         }
     }
@@ -115,9 +116,13 @@ class Parser {
 
     public AST Program() {
         // program: compoundStatament DOT
-        AST node = CompoundStatement();
-        Eat("DOT");
-        return node;
+        List<AST> nodes = StatementList();
+        Compound root = new Compound();
+        //Console.WriteLine(nodes[0]);
+        foreach (var item in nodes) {
+            root.Children.Add(item);
+        }
+        return root;
     }
 
     public Compound CompoundStatement() {
@@ -141,30 +146,22 @@ class Parser {
         AST node = Statement();
         List<AST> results = new List<AST>();
         results.Add(node);  
-
         // si pongo por ejempo { a:= 3 } falta el ;
         if (currentToken.Type != "SEMI" && !(node is NoOp)) {
             Utils.Error("Esperado ; al final de la instruccion");
         }
-        
         while (currentToken.Type == "SEMI") {
             Eat("SEMI");
-
             bool mk = false;
             if (currentToken.Type != "END") {
                 mk = true;
             }
-
             results.Add(Statement());
-
             // para validar que al final de la instruccion se puso ;
             if (mk == true && currentToken.Type == "END") {
                 Utils.Error("Esperado ; al final de la instruccion");
             }
         } 
-        
-
- 
         return results;
     }
 

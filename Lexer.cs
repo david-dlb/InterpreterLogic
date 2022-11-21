@@ -60,15 +60,11 @@ class Lexer {
             return new Token("FUNCTION", result);
         }
 
-        switch (result) {
-            case "BEGIN":
-                return new Token("BEGIN", "BEGIN");
-
-            case "IF":
-                return new Token("IF", "IF");
-
-            case "END":
-                return new Token("END", "END");
+        switch (result) { 
+            case "if":
+                return new Token("IF", "if");
+            case "while":
+                return new Token("WHILE", "while"); 
 
             default:
                 return new Token("ID", result);
@@ -147,8 +143,16 @@ class Lexer {
                 Advance();
                 return new Token("DOT", ".");
             }
+            if (currentChar == '{') { 
+                Advance();
+                return new Token("BEGIN", "{");
+            }
+            if (currentChar == '}') { 
+                Advance();
+                return new Token("END", "}");
+            }
             
-            Console.WriteLine(currentChar);
+            //Console.WriteLine(currentChar);
             Utils.Error("Caracter invalido");
         }     
         return new Token("EOF", "~");
