@@ -3,11 +3,11 @@ using System;
 namespace Conqueror.Logic.Language;
 
 class Compound : AST{
-    public List<Object> Children {
+    public List<AST> Children {
         get; private set;
     }
 
     public Compound() {
-        Children = new List<object>();
+        Children = new List<AST>();
     }
 }

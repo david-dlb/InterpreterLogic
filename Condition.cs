@@ -1,16 +1,16 @@
 using System;
 namespace Conqueror.Logic.Language;
 
-class Condition {
-    public Object Compound {
+class Condition : AST{
+    public AST Cond {
         get; private set;
     }
-    public Object Cond {
+    public Compound Compound {
         get; private set;
     }
 
-    public Condition(Object compound, Object cond) {
-        this.Compound = compound;
+    public Condition(AST cond, Compound compound) {
         this.Cond = cond;
+        this.Compound = compound;
     }
 }

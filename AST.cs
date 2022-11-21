@@ -1,5 +1,4 @@
 namespace Conqueror.Logic.Language;
 
-class AST{
-
+interface AST {
 }
