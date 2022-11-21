@@ -56,6 +56,10 @@ class Lexer {
             Advance();
         }
 
+        if (IsFunction(result)) {
+            return new Token("FUNCTION", result);
+        }
+
         switch (result) {
             case "BEGIN":
                 return new Token("BEGIN", "BEGIN");
@@ -70,6 +74,8 @@ class Lexer {
                 return new Token("ID", result);
         }
     }
+
+    
     
     public Token GetNextToken() {
         //Console.WriteLine(currentChar);
@@ -159,5 +165,15 @@ class Lexer {
     }
     private bool IsSpace(char ch) {
         return ch == '\n' || ch == '\r' || ch == ' ';
+    }
+
+    private bool IsFunction(string name) {
+        string[] names = { "StillCardEnemy", "ChangeHands" };
+        foreach (var item in names) {
+            if (item == name) {
+                return true;
+            }
+        }
+        return false;
     }
 }

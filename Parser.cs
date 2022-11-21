@@ -53,7 +53,7 @@ class Parser {
 
             case "INT":
                 Eat("INT");
-                return new Var(token);
+                return new Num(token.Value);
                 
             case "LPAREN":
                 Eat("LPAREN");
@@ -184,6 +184,8 @@ class Parser {
             case "ID":
                 return AssignmentSatement();
             
+            case "FUNCTION":
+                return Function();
             default:
                 return Empty();
         }
@@ -237,6 +239,14 @@ class Parser {
             Utils.Error("Falta un operador de condicion valido");
         }
         return new BinOp(node, token, expr2);
+    }
+
+    public Function Function() {
+        string name = currentToken.Value;
+        Eat("FUNCTION");
+        Eat("LPAREN");
+        Eat("RPAREN");  
+        return new Function(name);
     }
 
     public AST Empty() {

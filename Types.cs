@@ -1,3 +1,4 @@
+using System;
 namespace Conqueror.Logic.Language;
 
 class Var : AST{
@@ -15,30 +16,34 @@ class Var : AST{
 }
 
 
-class Num : AST{
-    public Token Token {
-        private set; get;
-    }
+class Num : AST{ 
     public int Value {
         private set; get;
     }
 
-    public Num(Token token) {
-        this.Token = token;
-        this.Value = Int32.Parse(token.Value);
+    public Num(string value) { 
+        this.Value = Int32.Parse(value);
+    }
+    public Num(int value) { 
+        this.Value = value;
     }
 }
-class Bool : AST{
-    public Token Token {
-        private set; get;
-    }
-    public string Value {
+class Bool : AST{ 
+    public bool Value {
         private set; get;
     }
 
-    public Bool(Token token) {
-        this.Token = token;
-        this.Value = token.Value;
+    public Bool(bool value) { 
+        Console.WriteLine(value);
+        this.Value = value;
         
     }
 }
+
+class Function : AST { 
+    private string name;
+    public Function(string name) {
+        this.name = name;
+    }
+}
+ 
