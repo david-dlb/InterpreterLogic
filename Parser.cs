@@ -178,6 +178,9 @@ class Parser {
             case "IF":
                 return Conditional();
 
+            case "WHILE":
+                return Repetition();
+
             case "ID":
                 return AssignmentSatement();
             
@@ -203,6 +206,15 @@ class Parser {
         //Console.WriteLine(((Var)node).Token.Type); 
         Eat("ID");
         return node;
+    }
+
+    public AST Repetition() {
+        Eat("WHILE"); 
+        Eat("LPAREN");
+        AST comparer = Logic();
+        Eat("RPAREN");
+        Compound componentStatement = CompoundStatement(); 
+        return new While(comparer, componentStatement);
     }
 
     public AST Conditional() {

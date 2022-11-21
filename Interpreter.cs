@@ -41,6 +41,9 @@ class Interpreter{
         if (node is Condition) {
             VisitCondition(node);
         }
+        if (node is While) {
+            VisitWhile(node);
+        }
         if (node is Function) {
             VisitFunction(node);
         }
@@ -150,6 +153,30 @@ class Interpreter{
             Utils.Error("Uso de variable no creada previamente");
         }
         return new Num(Scope[name]);
+    }
+
+    public void VisitWhile(AST node) {
+        While condition = (While)node;
+        if (!(condition.Cond is BinOp)) {
+            Utils.Error("Error se esperaba una operacion binaria de comparacion");
+        }
+        bool folow = true;
+        int calls = 0;
+
+        while (folow) {
+            calls++;
+            if (calls > 100000) {
+                Utils.Error("Ciclo infinito");
+            }
+            AST mk = VisitBinOp(condition.Cond);
+            Bool cond = (Bool)mk;
+            if (cond.Value == true) {
+                Visit(condition.Compound);
+            } else {
+                folow = false;
+            }
+        }
+        
     }
 
     public void VisitCondition(AST node) {

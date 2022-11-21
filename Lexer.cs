@@ -126,15 +126,15 @@ class Lexer {
             if (IsAlpha(currentChar)) {
                 return Id();
             }
-            if (currentChar == ':' && Peek() == '=') {
-                Advance();
-                Advance();
-                return new Token("ASSIGN", ":=");
-            }if (currentChar == '=' && Peek() == '=') {
-                Advance();
-                Advance();
-                return new Token("EQUAL", "==");
-            }
+            if (currentChar == '=') {
+                Advance(); 
+                if (currentChar != '=') {
+                    return new Token("ASSIGN", "=");
+                } else { 
+                    Advance();
+                    return new Token("EQUAL", "==");
+                }
+            } 
             if (currentChar == ';') {
                 Advance();
                 return new Token("SEMI", ";");

@@ -3,11 +3,14 @@ using System;
 using Conqueror.Logic;
 using Conqueror.Logic.Language;
 string effect = @"   
-                    EnemyLife:= 2; 
+                    EnemyLife= 2; 
                     if (EnemyLife == 2) {
-                        EnemyLife := 3;
+                        EnemyLife = 3;
                         ChangeHands();
                     };  
+                    while (EnemyLife > 1) {
+                        EnemyLife = EnemyLife - 1;
+                    }
                 ";
 
 Lexer lexer = new Lexer(effect); 
