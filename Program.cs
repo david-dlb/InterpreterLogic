@@ -23,6 +23,14 @@ scope.Add("EnemyLife", 15);
 scope.Add("MyCharms", 5);
 scope.Add("EnemyCharms", 5); 
 
+Context ctx = new Context();
+ctx.Add(new Token("INT", "Hola"), 0);
+ctx.Add(new Token("CONST", "d"), 0);
+ctx.Add(new Token("FUNC", "e"), 0);
+Console.WriteLine(ctx.GetType("d"));
+
+ctx.Show();
+
 Interpreter i = new Interpreter(pr, scope);
 i.Interpret();
 foreach (var item in i.Scope)

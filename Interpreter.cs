@@ -140,6 +140,11 @@ class Interpreter{
         AST visit = Visit(assign.Right);
         Num result = (Num)visit; 
 
+        // expresiones tipo EnemyLife= ;
+        if (result == null) {
+            Utils.Error("Sintaxis incorrecta, falta valor a la variable");
+        }
+
         if (Scope.ContainsKey(name)) {
             Scope[name] = result.Value;
         } else {
