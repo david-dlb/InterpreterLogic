@@ -27,14 +27,14 @@ class Context {
         }
         return false;
     }
-    public int? GetValue(string id) {
+    public int GetValue(string id) {
         foreach (var item in scope) {
             if (item.Key.Value == id) {
                 return item.Value;
             }  
         }
         Utils.Error("Intento de acceder a una variable no declarada");
-        return null;
+        return 0;
     }public string? GetType(string id) {
         foreach (var item in scope) {
             if (item.Key.Value == id) {

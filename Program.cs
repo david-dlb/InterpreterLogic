@@ -3,7 +3,7 @@ using System;
 using Conqueror.Logic;
 using Conqueror.Logic.Language;
 string effect = @"   
-                    EnemyLife= 2; 
+                    CantMyCards= 2; 
                     if (EnemyLife == 2) {
                         EnemyLife = 3;
                         ChangeHands();
@@ -24,26 +24,28 @@ scope.Add("MyCharms", 5);
 scope.Add("EnemyCharms", 5); 
 
 Context ctx = new Context();
-ctx.Add(new Token("INT", "Hola"), 0);
-ctx.Add(new Token("CONST", "d"), 0);
-ctx.Add(new Token("FUNC", "e"), 0);
-Console.WriteLine(ctx.GetType("d"));
+ctx.Add(new Token("INT", "MyLife"), 30);
+ctx.Add(new Token("INT", "EnemyLife"), 30);
+ctx.Add(new Token("INT", "MyCharms"), 5);
+ctx.Add(new Token("INT", "EnemyCharms"), 5);
+ctx.Add(new Token("CONST", "CantMyCards"), 0);
+ctx.Add(new Token("FUNC", "ChangeHands"), 0);
 
-ctx.Show();
-
-Interpreter i = new Interpreter(pr, scope);
+ 
+Interpreter i = new Interpreter(pr, ctx);
 i.Interpret();
-foreach (var item in i.Scope)
-{
-    Console.ForegroundColor = ConsoleColor.DarkYellow;
-    Console.Write('[');
+ctx.Show();
+// foreach (var item in i.Scope)
+// {
+//     Console.ForegroundColor = ConsoleColor.DarkYellow;
+//     Console.Write('[');
 
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.Write(item.Key);
+//     Console.ForegroundColor = ConsoleColor.Green;
+//     Console.Write(item.Key);
 
-    Console.ForegroundColor = ConsoleColor.DarkYellow;
-    Console.Write("]: ");
+//     Console.ForegroundColor = ConsoleColor.DarkYellow;
+//     Console.Write("]: ");
 
-    Console.ForegroundColor = ConsoleColor.DarkBlue;
-    Console.WriteLine(item.Value);
-}
+//     Console.ForegroundColor = ConsoleColor.DarkBlue;
+//     Console.WriteLine(item.Value);
+// }

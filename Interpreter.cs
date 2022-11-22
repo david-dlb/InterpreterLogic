@@ -4,12 +4,12 @@ using System;
 namespace Conqueror.Logic.Language;
 
 class Interpreter{
-    public Dictionary<string, int> Scope;
+    public Context Context;
     private Parser parser;
     
-    public Interpreter(Parser parser, Dictionary<string, int> scope) {
+    public Interpreter(Parser parser, Context context) {
         this.parser = parser;
-        this.Scope = scope;
+        this.Context = context;
     }
 
     public AST Visit(AST node) { 
@@ -137,6 +137,10 @@ class Interpreter{
     public void VisitAssign(AST node) {
         Assign assign = (Assign)node;
         string name = ((Var)assign.Left).Value;
+        
+        if (Context.GetType(name) != "INT") {
+            Utils.Error("Intendo de modificar una variable que no es INT");
+        }
         AST visit = Visit(assign.Right);
         Num result = (Num)visit; 
 
@@ -145,19 +149,19 @@ class Interpreter{
             Utils.Error("Sintaxis incorrecta, falta valor a la variable");
         }
 
-        if (Scope.ContainsKey(name)) {
-            Scope[name] = result.Value;
+        if (Context.ContainsId(name)) {
+            Context.Update(name, result.Value);
         } else {
-            Scope.Add(name, result.Value);
+            Context.Add(new Token("INT", name), result.Value);
         }
     }
 
     public AST VisitVar(AST node) {
         string name = ((Var)node).Value;
-        if (!Scope.ContainsKey(name)) {
+        if (!Context.ContainsId(name)) {
             Utils.Error("Uso de variable no creada previamente");
         }
-        return new Num(Scope[name]);
+        return new Num(Context.GetValue(name));
     }
 
     public void VisitWhile(AST node) {
@@ -198,10 +202,10 @@ class Interpreter{
     public void VisitFunction(AST node) {
         Function func = (Function)node;
         string name = func.Name;
-        if (Scope.ContainsKey(name)) {
-            Scope[name] ++;
+        if (Context.ContainsId(name)) {
+            Context.Update(name, Context.GetValue(name) + 1);
         } else {
-            Scope.Add(name, 1);
+            Context.Add(new Token("INT", name), 1);
         }
     }
 
