@@ -3,7 +3,7 @@ using System;
 using Conqueror.Logic;
 using Conqueror.Logic.Language;
 string effect = @"   
-                    CantMyCards= 2; 
+                    EnemyLife= 2; 
                     if (EnemyLife == 2) {
                         EnemyLife = 3;
                         ChangeHands();
@@ -29,13 +29,20 @@ ctx.Add(new Token("INT", "EnemyLife"), 30);
 ctx.Add(new Token("INT", "MyCharms"), 5);
 ctx.Add(new Token("INT", "EnemyCharms"), 5);
 ctx.Add(new Token("CONST", "CantMyCards"), 0);
-ctx.Add(new Token("FUNC", "ChangeHands"), 0);
 
+foreach (var item in Utils.Names) {
+    ctx.Add(new Token("FUNC", item), 0);
+}
  
 Interpreter i = new Interpreter(pr, ctx);
 i.Interpret();
 ctx.Show();
-// foreach (var item in i.Scope)
+
+foreach (var item in Utils.Names) {
+    int value = ctx.GetValue(item);
+}
+
+//- foreach (var item in i.Scope)
 // {
 //     Console.ForegroundColor = ConsoleColor.DarkYellow;
 //     Console.Write('[');

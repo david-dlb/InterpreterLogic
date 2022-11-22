@@ -172,8 +172,7 @@ class Lexer {
     }
 
     private bool IsFunction(string name) {
-        string[] names = { "StillCardEnemy", "ChangeHands" };
-        foreach (var item in names) {
+        foreach (var item in Utils.Names) {
             if (item == name) {
                 return true;
             }
